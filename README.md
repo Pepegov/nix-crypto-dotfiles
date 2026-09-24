@@ -8,23 +8,21 @@ This repository defines a small, replaceable NixOS 26.05 guest for narrowly scop
 normal Linux host -> KVM/QEMU and libvirt -> encrypted NixOS guest -> Trezor Suite/Firefox -> Trezor
 ```
 
-The guest compartmentalizes exchanges, wallet sites, and hardware-wallet software from the everyday host desktop, development tools, downloads, documents, messaging, and browser extensions. Reproducible configuration also makes persistence less valuable: the guest can be rebuilt from this repository.
+The guest compartmentalizes exchanges, wallet sites, and hardware-wallet software from the everyday host desktop, development tools, downloads, documents, messaging, and browser extensions. Firefox is the financial browser; the separately launched Brave Rabby profile is limited to the Rabby EVM wallet extension. Reproducible configuration also makes persistence less valuable: the guest can be rebuilt from this repository.
 
 This does not turn a hostile host into a trusted one. Host root, the host kernel, libvirt, QEMU, and host firmware can inspect or alter an unlocked guest, its disk, networking, display, keyboard input, or USB passthrough. Treat the host and hypervisor as trusted while this VM is running. Verify destination address, amount, asset/network, and all other details on the physical Trezor display before approval.
 
 ## Repository layout
 
 ```text
-flake.nix                         pinned NixOS input
-flake.lock                        reviewed nixpkgs revision
-hosts/crypto-vm/configuration.nix host-wide configuration and user
-hosts/crypto-vm/disco.nix         declarative EFI, LUKS2, and ext4 layout
-hosts/crypto-vm/hardware-configuration.nix KVM hardware baseline
-modules/security.nix              local hardening and intentionally absent services
-modules/networking.nix            NAT-friendly networking and Nix trust policy
-modules/desktop.nix               XFCE Xorg desktop
-modules/trezor.nix                Trezor-specific udev access
-modules/browser.nix               dedicated Firefox policies
+nixos/hosts/crypto-vm/configuration.nix host-wide configuration and user
+nixos/hosts/crypto-vm/disco.nix         declarative EFI, LUKS2, and ext4 layout
+nixos/hosts/crypto-vm/hardware-configuration.nix KVM hardware baseline
+nixos/modules/security.nix              local hardening and intentionally absent services
+nixos/modules/networking.nix            NAT-friendly networking and Nix trust policy
+nixos/modules/desktop.nix               XFCE Xorg desktop
+nixos/modules/trezor.nix                Trezor-specific udev access
+nixos/modules/browser.nix               dedicated Firefox policies
 SECURITY.md                       security boundary and limitations
 HOST-CHECKLIST.md                 libvirt/virt-manager configuration checklist
 ```
@@ -44,7 +42,7 @@ disk. Confirm the installer sees the intended guest disk before proceeding.
 lsblk
 git clone https://YOUR-REPOSITORY-URL /tmp/crypto-vm
 cd /tmp/crypto-vm
-nix run github:nix-community/disko -- --mode disko --flake .#crypto-vm
+nix run .#disko -- --mode disko --flake .#crypto-vm
 ```
 
 Disko prompts twice for a strong LUKS passphrase. Never put it in Nix, a shell script, Git, an environment variable, initrd configuration, or a password manager. LUKS protects a powered-off disk copy and VM storage at rest. It does not protect the filesystem, memory, keyboard/display, or USB once the VM is unlocked, particularly from the host/hypervisor.
@@ -133,7 +131,11 @@ Never enter a Trezor wallet backup/recovery seed into this VM, a browser, the cl
 
 Firefox policy disables telemetry, studies, Pocket, Firefox account sync, form history, saved passwords, and extension installation. This is containment, not anonymity. No browser password or secret is managed declaratively. Do not use this guest for general browsing, email, Telegram, Discord, social media, development, unrelated downloads, documents, or entertainment.
 
-Additional wallets are deliberately absent. Add one only by editing `environment.systemPackages` in `hosts/crypto-vm/configuration.nix` after reviewing nixpkgs provenance, updates, Trezor support, private-key behavior, and required daemons. Prefer nixpkgs packages. Never add download-and-run activation scripts or imperatively installed binaries.
+The XFCE application menu also contains "Brave Rabby". It always starts with its own profile at `/home/crypto/.local/share/brave-rabby`; Firefox data and the normal Brave profile are not used. Enterprise policy installs the official Rabby Wallet Chrome Web Store extension and blocks all other extensions, sync, browser sign-in, autofill, saved passwords, private windows, and additional Brave profiles. Open `brave://policy` after the first launch to confirm that the policy loaded. Rabby extension updates are signed publisher updates retrieved through the Chrome Web Store update service, not Nix store artifacts.
+
+Do not create, import, or restore a software-wallet seed in Rabby. Use the Trezor hardware-wallet connection path, verify every transaction on the Trezor display, and treat the Brave profile as potentially disposable state.
+
+Additional wallets are deliberately absent. Add one only by editing `environment.systemPackages` in `nixos/hosts/crypto-vm/configuration.nix` after reviewing nixpkgs provenance, updates, Trezor support, private-key behavior, and required daemons. Prefer nixpkgs packages. Never add download-and-run activation scripts or imperatively installed binaries.
 
 The VM is disposable. Back up this repository and its reviewed lock file, not seeds, private keys, recovery material, exchange credentials, API keys, 2FA codes, LUKS passphrases, or password-manager secrets. The Nix store is world-readable to local users and contains source/configuration text, closures, and build outputs. It is not secret storage.
 

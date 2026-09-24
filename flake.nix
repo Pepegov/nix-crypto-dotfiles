@@ -11,6 +11,11 @@
 
   outputs = { self, nixpkgs, disko }:
     {
+      apps.x86_64-linux.disko = {
+        type = "app";
+        program = "${disko.packages.x86_64-linux.default}/bin/disko";
+      };
+
       nixosConfigurations.crypto-vm = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
