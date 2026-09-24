@@ -23,6 +23,7 @@ nixos/modules/networking.nix            NAT-friendly networking and Nix trust po
 nixos/modules/desktop.nix               XFCE Xorg desktop
 nixos/modules/trezor.nix                Trezor-specific udev access
 nixos/modules/browser.nix               dedicated Firefox policies
+home-manager/crypto.nix                 user packages and declarative XFCE profile
 SECURITY.md                       security boundary and limitations
 HOST-CHECKLIST.md                 libvirt/virt-manager configuration checklist
 ```
@@ -42,7 +43,9 @@ disk. Confirm the installer sees the intended guest disk before proceeding.
 lsblk
 git clone https://YOUR-REPOSITORY-URL /tmp/crypto-vm
 cd /tmp/crypto-vm
-nix run .#disko -- --mode disko --flake .#crypto-vm
+nix run --extra-experimental-features 'nix-command flakes' .#disko -- \
+  --mode destroy,format,mount \
+  --flake .#crypto-vm
 ```
 
 Disko prompts twice for a strong LUKS passphrase. Never put it in Nix, a shell script, Git, an environment variable, initrd configuration, or a password manager. LUKS protects a powered-off disk copy and VM storage at rest. It does not protect the filesystem, memory, keyboard/display, or USB once the VM is unlocked, particularly from the host/hypervisor.
@@ -51,7 +54,7 @@ The disko command mounts the new filesystems at `/mnt`. Copy the repository into
 the installed system and install it:
 
 ```sh
-mkdir -p /mnt/etc/nixos
+mkdir -p /mnt/etc/nixos/crypto-vm
 cp -a /tmp/crypto-vm /mnt/etc/nixos/crypto-vm
 cd /mnt/etc/nixos/crypto-vm
 nixos-install --flake .#crypto-vm
@@ -70,6 +73,21 @@ From the repository in the running guest:
 ```sh
 sudo nixos-rebuild switch --flake .#crypto-vm
 ```
+
+### Home Manager profile
+
+Home Manager is integrated into the `crypto-vm` NixOS configuration. Edit
+`home-manager/crypto.nix` for packages and XFCE preferences of the `crypto`
+user, then apply the change with the same system rebuild command:
+
+```sh
+sudo nixos-rebuild switch --flake .#crypto-vm
+```
+
+Do not run `home-manager switch` separately. On its first activation, Home
+Manager saves an existing conflicting user configuration file with the
+`.hm-backup` suffix. Log out and back in after changing XFCE panel, theme, or
+keyboard-shortcut settings.
 
 That command uses the existing `flake.lock`; it does not advance nixpkgs. The lock pins NixOS 26.05 to a specific commit. To deliberately update, review release notes and changes, then run:
 
