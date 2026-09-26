@@ -28,7 +28,7 @@ SECURITY.md                       security boundary and limitations
 HOST-CHECKLIST.md                 libvirt/virt-manager configuration checklist
 ```
 
-XFCE is chosen because it is a conventional, maintained Xorg desktop with a smaller scope than GNOME. It is more dependable in a standard virt-manager graphics setup than an unusual minimalist compositor. The configuration removes its document/media viewers and screenshot utility, keeps the screen locker, and disables removable-media services.
+XFCE is chosen because it is a conventional, maintained Xorg desktop with a smaller scope than GNOME. It is more dependable in a standard virt-manager graphics setup than an unusual minimalist compositor. The configuration retains Mousepad as a small local text editor, removes its document/media viewers and screenshot utility, keeps the screen locker, and disables removable-media services. Do not use Mousepad for seeds, passwords, recovery material, or other secrets.
 
 ## Initial VM creation and LUKS
 
