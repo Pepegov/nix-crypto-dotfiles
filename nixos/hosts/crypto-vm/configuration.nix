@@ -9,7 +9,7 @@
     ../../modules/desktop.nix
     ../../modules/trezor.nix
     ../../modules/browser.nix
-    ../../modulrs/git.nix
+    ../../modules/git.nix
   ];
 
   networking.hostName = "crypto-vm";
