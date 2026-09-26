@@ -8,7 +8,7 @@ This repository defines a small, replaceable NixOS 26.05 guest for narrowly scop
 normal Linux host -> KVM/QEMU and libvirt -> encrypted NixOS guest -> Trezor Suite/Firefox -> Trezor
 ```
 
-The guest compartmentalizes exchanges, wallet sites, and hardware-wallet software from the everyday host desktop, development tools, downloads, documents, messaging, and browser extensions. Firefox is the financial browser; the separately launched Brave Rabby profile is limited to the Rabby EVM wallet extension. Reproducible configuration also makes persistence less valuable: the guest can be rebuilt from this repository.
+The guest compartmentalizes exchanges, wallet sites, and hardware-wallet software from the everyday host desktop, development tools, downloads, documents, messaging, and browser extensions. Firefox is the financial browser; the separately launched Brave Wallet profile is limited to the reviewed Rabby Wallet and Trust Wallet extensions. Reproducible configuration also makes persistence less valuable: the guest can be rebuilt from this repository.
 
 This does not turn a hostile host into a trusted one. Host root, the host kernel, libvirt, QEMU, and host firmware can inspect or alter an unlocked guest, its disk, networking, display, keyboard input, or USB passthrough. Treat the host and hypervisor as trusted while this VM is running. Verify destination address, amount, asset/network, and all other details on the physical Trezor display before approval.
 
@@ -151,11 +151,11 @@ Never enter a Trezor wallet backup/recovery seed into this VM, a browser, the cl
 
 Firefox policy disables telemetry, studies, Pocket, Firefox account sync, form history, saved passwords, and extension installation. This is containment, not anonymity. No browser password or secret is managed declaratively. Do not use this guest for general browsing, email, Telegram, Discord, social media, development, unrelated downloads, documents, or entertainment.
 
-The XFCE application menu also contains "Brave Rabby". It always starts with its own profile at `/home/crypto/.local/share/brave-rabby`; Firefox data and the normal Brave profile are not used. Enterprise policy installs the official Rabby Wallet Chrome Web Store extension and blocks all other extensions, sync, browser sign-in, autofill, saved passwords, private windows, and additional Brave profiles. Open `brave://policy` after the first launch to confirm that the policy loaded. Rabby extension updates are signed publisher updates retrieved through the Chrome Web Store update service, not Nix store artifacts.
+The XFCE application menu also contains "Brave Wallet". It always starts with its own profile at `/home/crypto/.local/share/brave-wallet`; Firefox data and the normal Brave profile are not used. Enterprise policy installs the official Rabby Wallet and Trust Wallet Chrome Web Store extensions and blocks all others, sync, browser sign-in, autofill, saved passwords, private windows, and additional Brave profiles. Open `brave://policy` after the first launch to confirm that the policy loaded. Extension updates are signed publisher updates retrieved through the Chrome Web Store update service, not Nix store artifacts.
 
-Do not create, import, or restore a software-wallet seed in Rabby. Use the Trezor hardware-wallet connection path, verify every transaction on the Trezor display, and treat the Brave profile as potentially disposable state.
+Do not create, import, or restore a software-wallet seed in Rabby or Trust Wallet. Use a Trezor hardware-wallet connection path when the extension supports it, verify every transaction on the Trezor display, and treat the Brave profile as potentially disposable state.
 
-Additional wallets are deliberately absent. Add one only by editing `environment.systemPackages` in `nixos/hosts/crypto-vm/configuration.nix` after reviewing nixpkgs provenance, updates, Trezor support, private-key behavior, and required daemons. Prefer nixpkgs packages. Never add download-and-run activation scripts or imperatively installed binaries.
+Additional wallets are deliberately absent. Add one only by reviewing its provenance, updates, Trezor support, private-key behavior, required daemons, and browser-extension permissions. Prefer nixpkgs packages where available. Never add download-and-run activation scripts or imperatively installed binaries.
 
 The VM is disposable. Back up this repository and its reviewed lock file, not seeds, private keys, recovery material, exchange credentials, API keys, 2FA codes, LUKS passphrases, or password-manager secrets. The Nix store is world-readable to local users and contains source/configuration text, closures, and build outputs. It is not secret storage.
 
