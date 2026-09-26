@@ -16,6 +16,25 @@
   ];
 
   xdg.configFile = {
+    # udev starts Suite when a Trezor is passed through during an active
+    # session. This handles the complementary case: the Trezor was attached to
+    # the VM before the user logged in. It does nothing when no Trezor is
+    # present and does not start a bridge daemon.
+    "autostart/trezor-suite-if-connected.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Open Trezor Suite when Trezor is connected
+      Exec=${pkgs.writeShellScript "trezor-suite-if-connected" ''
+        for device in /sys/bus/usb/devices/*; do
+          if [ -r "$device/idVendor" ] && [ "$(< "$device/idVendor")" = "534c" ]; then
+            exec ${pkgs.trezor-suite}/bin/trezor-suite
+          fi
+        done
+      ''}
+      OnlyShowIn=XFCE;
+      X-GNOME-Autostart-enabled=true
+    '';
+
     "xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml".text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <channel name="xfce4-panel" version="1.0">

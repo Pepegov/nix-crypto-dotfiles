@@ -134,7 +134,9 @@ Recommended workflow:
 2. Log in as `crypto`.
 3. Connect the Trezor physically.
 4. In virt-manager, explicitly attach that exact Trezor USB device to this VM.
-5. Verify the guest sees the expected device, then open Trezor Suite.
+5. Verify the guest sees the expected device. Passing through a Trezor starts
+   Trezor Suite automatically. It also starts after the `crypto` Xorg session
+   opens when the Trezor was already passed through before login.
 6. Perform only the intended operation.
 7. Verify address, amount, asset/network, and device-visible details on the Trezor display.
 8. Approve only on the Trezor after that verification.
