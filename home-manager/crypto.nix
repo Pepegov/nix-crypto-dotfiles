@@ -20,7 +20,9 @@
     # session. This handles the complementary case: the Trezor was attached to
     # the VM before the user logged in. It does nothing when no Trezor is
     # present and does not start a bridge daemon.
-    "autostart/trezor-suite-if-connected.desktop".text = ''
+    "autostart/trezor-suite-if-connected.desktop" = {
+      force = true;
+      text = ''
       [Desktop Entry]
       Type=Application
       Name=Open Trezor Suite when Trezor is connected
@@ -33,9 +35,12 @@
       ''}
       OnlyShowIn=XFCE;
       X-GNOME-Autostart-enabled=true
-    '';
+      '';
+    };
 
-    "xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml".text = ''
+    "xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml" = {
+      force = true;
+      text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <channel name="xfce4-panel" version="1.0">
         <property name="panels" type="array">
@@ -97,9 +102,12 @@
         </property>
         <property name="configver" type="int" value="2"/>
       </channel>
-    '';
+      '';
+    };
 
-    "xfce4/xfconf/xfce-perchannel-xml/xsettings.xml".text = ''
+    "xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" = {
+      force = true;
+      text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <channel name="xsettings" version="1.0">
         <property name="Net" type="empty">
@@ -124,9 +132,12 @@
           <property name="SyncThemes" type="bool" value="true"/>
         </property>
       </channel>
-    '';
+      '';
+    };
 
-    "xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml".text = ''
+    "xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml" = {
+      force = true;
+      text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <channel name="xfwm4" version="1.0">
         <property name="general" type="empty">
@@ -134,9 +145,12 @@
           <property name="title_font" type="string" value="Noto Sans Bold 9"/>
         </property>
       </channel>
-    '';
+      '';
+    };
 
-    "xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml".text = ''
+    "xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml" = {
+      force = true;
+      text = ''
       <?xml version="1.0" encoding="UTF-8"?>
       <channel name="xfce4-keyboard-shortcuts" version="1.0">
         <property name="commands" type="empty">
@@ -145,6 +159,7 @@
           </property>
         </property>
       </channel>
-    '';
+      '';
+    };
   };
 }

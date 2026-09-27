@@ -76,18 +76,19 @@ sudo nixos-rebuild switch --flake .#crypto-vm
 
 ### Home Manager profile
 
-Home Manager is integrated into the `crypto-vm` NixOS configuration. Edit
+Home Manager is defined as the standalone `crypto` profile in the flake. Edit
 `home-manager/crypto.nix` for packages and XFCE preferences of the `crypto`
-user, then apply the change with the same system rebuild command:
+user. Apply changes as that user:
 
 ```sh
-sudo nixos-rebuild switch --flake .#crypto-vm
+home-manager switch --flake .#crypto
 ```
 
-Do not run `home-manager switch` separately. On its first activation, Home
-Manager saves an existing conflicting user configuration file with the
-`.hm-backup` suffix. Log out and back in after changing XFCE panel, theme, or
-keyboard-shortcut settings.
+NixOS changes still use `sudo nixos-rebuild switch --flake .#crypto-vm`.
+Home Manager owns the declared XFCE and Trezor Suite autostart files; it
+replaces local edits to them on every switch. Existing `.hm-backup` files are
+left in place but do not block activation. Log out and back in after changing
+XFCE panel, theme, or keyboard-shortcut settings.
 
 That command uses the existing `flake.lock`; it does not advance nixpkgs. The lock pins NixOS 26.05 to a specific commit. To deliberately update, review release notes and changes, then run:
 

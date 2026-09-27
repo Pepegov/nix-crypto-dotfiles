@@ -14,26 +14,35 @@
   };
 
   outputs = { self, nixpkgs, disko, home-manager }:
+    let
+      system = "x86_64-linux";
+      homePkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg:
+          nixpkgs.lib.getName pkg == "trezor-suite";
+      };
+    in
     {
-      apps.x86_64-linux.disko = {
+      apps.${system}.disko = {
         type = "app";
-        program = "${disko.packages.x86_64-linux.default}/bin/disko";
+        program = "${disko.packages.${system}.default}/bin/disko";
+      };
+
+      homeConfigurations.crypto = home-manager.lib.homeManagerConfiguration {
+        pkgs = homePkgs;
+        modules = [ ./home-manager/crypto.nix ];
       };
 
       nixosConfigurations.crypto-vm = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
         modules = [
           disko.nixosModules.disko
-          home-manager.nixosModules.home-manager
           ./nixos/hosts/crypto-vm/configuration.nix
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "hm-backup";
-              users.crypto = import ./home-manager/crypto.nix;
-            };
-          }
+          ({ pkgs, ... }: {
+            environment.systemPackages = [
+              home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
+            ];
+          })
         ];
       };
     };
