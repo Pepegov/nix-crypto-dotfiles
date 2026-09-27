@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   # These are the maintained rules from the pinned nixpkgs source. They grant
