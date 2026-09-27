@@ -30,4 +30,12 @@
   # Deliberately do not enable services.trezord. Trezor Suite desktop includes
   # its own bridge executable when needed; a permanent system bridge would add
   # an always-running local HTTP service with no benefit to this workflow.
+
+  environment.systemPackages = with pkgs; [
+    trezor-suite
+  ];
+
+  # Trezor Suite is the only unfree package. Restricting this avoids making an
+  # accidental future unfree dependency acceptable without an explicit review.
+  nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "trezor-suite";
 }

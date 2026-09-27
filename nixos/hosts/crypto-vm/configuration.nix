@@ -10,6 +10,7 @@
     ../../modules/trezor.nix
     ../../modules/browser.nix
     ../../modules/git.nix
+    ../../modules/programs.nix
   ];
 
   networking.hostName = "crypto-vm";
@@ -29,14 +30,6 @@
     extraGroups = [ "wheel" "trezord" ];
   };
   users.groups.trezord = { };
-
-  environment.systemPackages = with pkgs; [
-    trezor-suite
-  ];
-
-  # Trezor Suite is the only unfree package. Restricting this avoids making an
-  # accidental future unfree dependency acceptable without an explicit review.
-  nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "trezor-suite";
 
   system.stateVersion = "26.05";
 }
