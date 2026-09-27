@@ -11,6 +11,7 @@
     ../../modules/browser.nix
     ../../modules/git.nix
     ../../modules/programs.nix
+    ../../modules/gpg.nix
   ];
 
   networking.hostName = "crypto-vm";
