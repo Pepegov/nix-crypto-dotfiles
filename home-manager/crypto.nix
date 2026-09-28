@@ -69,7 +69,17 @@
           </property>
         </property>
         <property name="plugins" type="empty">
-          <property name="plugin-1" type="string" value="whiskermenu"/>
+          <property name="plugin-1" type="string" value="whiskermenu">
+            <!-- Keep the wallet browser's isolated launcher prominent rather
+                 than pinning Brave's regular profile. -->
+            <property name="favorites" type="array">
+              <value type="string" value="xfce4-terminal.desktop"/>
+              <value type="string" value="thunar.desktop"/>
+              <value type="string" value="firefox.desktop"/>
+              <value type="string" value="brave-wallet.desktop"/>
+              <value type="string" value="trezor-suite.desktop"/>
+            </property>
+          </property>
           <property name="plugin-2" type="string" value="separator">
             <property name="style" type="uint" value="0"/>
             <property name="expand" type="bool" value="false"/>
