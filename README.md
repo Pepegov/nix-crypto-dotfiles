@@ -30,6 +30,8 @@ HOST-CHECKLIST.md                 libvirt/virt-manager configuration checklist
 
 XFCE is chosen because it is a conventional, maintained Xorg desktop with a smaller scope than GNOME. It is more dependable in a standard virt-manager graphics setup than an unusual minimalist compositor. The configuration retains Mousepad as a small local text editor, removes its document/media viewers and screenshot utility, keeps the screen locker, and disables removable-media services. Do not use Mousepad for seeds, passwords, recovery material, or other secrets.
 
+An ACPI shutdown request from virt-manager or libvirt powers off the guest through `systemd-logind`, including during an active XFCE session. It does not require the QEMU guest agent.
+
 ## Initial VM creation and LUKS
 
 Create a VM from a current NixOS 26.05 graphical installer ISO. Use a normal libvirt NAT network, a virtio disk, and an explicit virtual GPU. See [HOST-CHECKLIST.md](HOST-CHECKLIST.md) before booting it. Do not configure shared folders, virtiofs, 9p, clipboard sharing, drag-and-drop, USB auto-redirection, or the QEMU guest agent.

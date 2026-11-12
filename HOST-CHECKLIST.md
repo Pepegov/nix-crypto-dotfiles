@@ -12,7 +12,7 @@ These choices are configured on the Linux host in libvirt or virt-manager. The g
 | Shared folders | potentially harmful / unnecessary attack surface | Do not configure host filesystem sharing. |
 | virtiofs | potentially harmful / unnecessary attack surface | Do not expose host directories. |
 | 9p filesystem sharing | potentially harmful / unnecessary attack surface | Do not expose host directories. |
-| QEMU guest agent | unnecessary for this threat model | Do not install or enable it. Shutdown, IP reporting, and host integration are convenience features, not required for display or networking. |
+| QEMU guest agent | unnecessary for this threat model | Do not install or enable it. ACPI shutdown requests are handled by guest `systemd-logind`; IP reporting and other host integration are not required. |
 | SPICE guest tools | potentially harmful / unnecessary attack surface | Do not install broad guest integration solely for clipboard, file sharing, or resolution convenience. Normal virtio/QXL graphics does not require clipboard sharing. |
 | Explicit Trezor USB passthrough | recommended | Attach the individual Trezor only when needed and detach it immediately afterwards. Verify vendor/product/device in virt-manager. |
 | USB auto-redirection | potentially harmful / unnecessary attack surface | Disable it. Never expose arbitrary USB devices automatically. |
