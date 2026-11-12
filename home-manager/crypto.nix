@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, unstablePkgs, ... }:
 
 {
   home.username = "crypto";
@@ -29,7 +29,7 @@
       Exec=${pkgs.writeShellScript "trezor-suite-if-connected" ''
         for device in /sys/bus/usb/devices/*; do
           if [ -r "$device/idVendor" ] && [ "$(< "$device/idVendor")" = "534c" ]; then
-            exec ${pkgs.trezor-suite}/bin/trezor-suite
+            exec ${unstablePkgs.trezor-suite}/bin/trezor-suite
           fi
         done
       ''}

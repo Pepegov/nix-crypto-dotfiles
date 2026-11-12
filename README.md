@@ -90,7 +90,7 @@ replaces local edits to them on every switch. Existing `.hm-backup` files are
 left in place but do not block activation. Log out and back in after changing
 XFCE panel, theme, or keyboard-shortcut settings.
 
-That command uses the existing `flake.lock`; it does not advance nixpkgs. The lock pins NixOS 26.05 to a specific commit. To deliberately update, review release notes and changes, then run:
+That command uses the existing `flake.lock`; it does not advance package inputs. The lock pins NixOS 26.05 and the separate `nixpkgs-unstable` source used only for Trezor Suite to specific commits. To deliberately update, review release notes and changes, then run:
 
 ```sh
 nix flake update --flake .
@@ -117,7 +117,7 @@ Rollback restores a system closure, not mutable browser profiles, exchange sessi
 
 ## Trezor USB passthrough and Suite
 
-`trezor-suite` is installed from the pinned nixpkgs package. At this pin it is an upstream Trezor AppImage fetched with a fixed hash and wrapped by nixpkgs. That is a deliberate compatibility layer, not a dynamic download during activation, boot, or login. It increases the trusted desktop application surface and its version moves only when you update the pin. The package links its bridge executable from nixpkgs rather than using the bundled one.
+`trezor-suite` is installed from the separately pinned `nixpkgs-unstable` input; the rest of the guest remains on NixOS 26.05. At this pin it is an upstream Trezor AppImage fetched with a fixed hash and wrapped by nixpkgs. That is a deliberate compatibility layer, not a dynamic download during activation, boot, or login. It increases the trusted desktop application surface and its version moves only when you update the lock. The package links its bridge executable from nixpkgs rather than using the bundled one.
 
 The system installs only the maintained `trezor-udev-rules` from the selected nixpkgs. The `crypto` user belongs to its narrow `trezord` device-access group. `services.trezord` is intentionally disabled: it would create an always-running bridge daemon. Trezor Suite desktop starts/uses its own bridge only when necessary. Check it after launching Suite if desired:
 

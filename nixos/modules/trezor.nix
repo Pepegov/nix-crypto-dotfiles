@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, unstablePkgs, ... }:
 
 {
   # These are the maintained rules from the pinned nixpkgs source. They grant
@@ -23,7 +23,7 @@
         "DISPLAY=:0"
         "XAUTHORITY=/home/crypto/.Xauthority"
       ];
-      ExecStart = "${pkgs.trezor-suite}/bin/trezor-suite";
+      ExecStart = "${unstablePkgs.trezor-suite}/bin/trezor-suite";
     };
   };
 
@@ -31,8 +31,8 @@
   # its own bridge executable when needed; a permanent system bridge would add
   # an always-running local HTTP service with no benefit to this workflow.
 
-  environment.systemPackages = with pkgs; [
-    trezor-suite
+  environment.systemPackages = [
+    unstablePkgs.trezor-suite
   ];
 
   # Trezor Suite is the only unfree package. Restricting this avoids making an
